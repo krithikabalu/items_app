@@ -1,0 +1,7 @@
+div.flash{margin: 1em 0; padding: 1em; background: lightgray; border: 1px solid blue; color: red}
+table, th, td {
+  border: 1px solid blue;
+}
+th{
+    font-weight: bold;
+}

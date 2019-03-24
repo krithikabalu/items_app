@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="../static/style.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Items in a Store</title>
+</head>
+
+<body>
+
+{% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+{% endfor %}
+
+<h1> Items in store </h1>
+
+{% if items %}
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+    </tr>
+    {% for item in items %}
+        <tr>
+            <td>{{item.get('name')}}</td>
+            <td>{{item.get('price')}}</td>
+            <td>{{item.get('quantity')}}</td>
+            <td>
+                <a href="{{ url_for('update_item_form', name=item.get('name')) }}">Edit/Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{%else%}
+<div class="flash"> No items present </div>
+
+{%endif%}
+
+<h3>Add item to store</h3>
+<form method="post" action="{{ url_for('create_item') }}">
+    <input type="text" name="name" placeholder="item name"/>
+    <input type="number" name="price" placeholder="price"/>
+    <input type="number" name="quantity" placeholder="quantity"/>
+    <input type="submit" value="Create new item"/>
+</form>
+</body>
+</html>
