@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, flash, url_for, render_template_string
+from flask_restful import abort
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
 app.config.from_mapping(SECRET_KEY='dev')
 
 items = [
-    {"name": "item1", "price": 100, "quantity":2000},
-    {"name": "item2", "price": 200, "quantity":2010}
-        ]
+    {"name": "item1", "price": 100, "quantity": 2000},
+    {"name": "item2", "price": 200, "quantity": 2010}
+]
 
 
 @app.route("/")
@@ -78,6 +79,15 @@ def get_item_list_jinja():
     return render_template_string(html, item_list=item_list)
 
 
+@app.route("/item/<string:item_name>")
+def get_item_details(item_name):
+    for item in items:
+        if item['name'] == item_name:
+            return render_template("items.html", items=item)
+        else:
+            abort(404)
+
+
 @app.route("/items", methods=["GET"])
 def get_items():
     return render_template("items.html", items=items)
@@ -121,6 +131,11 @@ def delete_item(name):
     if not item_found:
         flash("Item not found")
     return redirect(url_for('get_items'))
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return "<html><p><i>Sorry, The product you are looking for does not exist</i></p></html>"
 
 
 app.run(port=5000)
