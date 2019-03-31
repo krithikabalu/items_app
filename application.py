@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, url_for
+from flask import Flask, render_template, request, flash, url_for, render_template_string
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
@@ -13,6 +13,69 @@ items = [
 @app.route("/")
 def hello_world():
     return "hello world"
+
+
+@app.route("/store_info")
+def get_store_info():
+    return """
+    <html> 
+    <h1> ABC Stores </h1>
+    <p> <i> since 2000 </i></p>
+    </html>
+    """
+
+
+@app.route("/item-list-static")
+def get_item_list_static():
+    return """
+        <html> 
+        <h1> ABC Stores </h1>
+        <p> <i> since 2000 </i></p>
+        <ul>
+            <li>item 1</li>
+            <li>item 2</li>
+            <li>item 3</li>
+            <li>item 4</li>
+            <li>item 5</li>
+            <li>item 6</li>
+        </ul>
+        </html>
+        """
+
+
+@app.route("/item-list-dynamic")
+def get_item_list_dynamic():
+    item_list = ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9']
+    items_html = "<ul>"
+    items_html += "\n".join(["<li>{item}</li>".format(item=item) for item in item_list])
+    items_html += "</ul>"
+    html = """
+        <html> 
+        <h1> ABC Stores </h1>
+        <p> <i> since 2000 </i></p>
+        <ul>
+            {items_html}
+        </ul>
+        </html>
+        """
+    return html.format(items_html=items_html)
+
+
+@app.route("/item-list-jinja")
+def get_item_list_jinja():
+    item_list = ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9', 'item10']
+    html = """
+        <html> 
+        <h1> ABC Stores </h1>
+        <p> <i> since 2000 </i></p>
+        <ul>
+            {% for item in item_list %}
+                <li>{{item}}</li>
+            {% endfor %}
+        </ul>
+        </html>
+        """
+    return render_template_string(html, item_list=item_list)
 
 
 @app.route("/items", methods=["GET"])
