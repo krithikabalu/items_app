@@ -6,18 +6,15 @@
     <title>Items in a Store</title>
 </head>
 
-{% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-{% endfor %}
-
 <form method="post" action="{{ url_for('update_item', name=item.get('name')) }}">
     <input name="name" value="{{ request.form['name'] or item['name'] }}" required>
     <input name="price" value="{{ request.form['price'] or item['price'] }}" required>
     <input name="quantity" value="{{ request.form['quantity'] or item['quantity'] }}" required>
     <input type="submit" value="Update item">
 </form>
+
 <form method="post" action="{{ url_for('delete_item', name=item.get('name')) }}">
-    <input class="danger" type="submit" value="Delete item" onclick="return confirm('Are you sure?');"/>
+    <input class="danger" type="submit" value="Delete item"/>
 </form>
 
 </html>

@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, flash, url_for, render_template_string
-from flask_restful import abort
+from http import HTTPStatus
+
+from flask import Flask, render_template, request, url_for, render_template_string, jsonify
+from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
-app.config.from_mapping(SECRET_KEY='dev')
 
 items = [
     {"name": "item1", "price": 100, "quantity": 2000},
@@ -83,9 +84,9 @@ def get_item_list_jinja():
 def get_item_details(item_name):
     for item in items:
         if item['name'] == item_name:
-            return render_template("items.html", items=item)
+            return jsonify({"item": item})
         else:
-            abort(404)
+            abort(HTTPStatus.NOT_FOUND)
 
 
 @app.route("/items", methods=["GET"])
@@ -117,7 +118,7 @@ def update_item(name):
             item["price"]= request.form['price']
             item["quantity"]= request.form['quantity']
     if not item_found:
-        flash("Item not found")
+        abort(HTTPStatus.NOT_FOUND)
     return redirect(url_for('get_items'))
 
 
@@ -129,11 +130,11 @@ def delete_item(name):
             item_found = True
             items.remove(item)
     if not item_found:
-        flash("Item not found")
+        abort(HTTPStatus.NOT_FOUND)
     return redirect(url_for('get_items'))
 
 
-@app.errorhandler(404)
+@app.errorhandler(HTTPStatus.NOT_FOUND)
 def not_found(error):
     return "<html><p><i>Sorry, The product you are looking for does not exist</i></p></html>"
 

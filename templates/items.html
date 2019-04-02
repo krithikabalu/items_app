@@ -8,13 +8,8 @@
 
 <body>
 
-{% for message in get_flashed_messages() %}
-        <div class="flash">{{ message }}</div>
-{% endfor %}
-
 <h1> Items in store </h1>
 
-{% if items %}
 <table>
     <tr>
         <th>Name</th>
@@ -32,11 +27,6 @@
         </tr>
     {% endfor %}
 </table>
-
-{%else%}
-<div class="flash"> No items present </div>
-
-{%endif%}
 
 <h3>Add item to store</h3>
 <form method="post" action="{{ url_for('create_item') }}">
